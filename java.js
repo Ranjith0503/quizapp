@@ -31,7 +31,7 @@ back.addEventListener("click", function () {
 });
 
 var quizbutton=document.getElementById("quizbutton")
-var questionpage=document.getElementById("questionpage")
+var questionpage=document.getElementById("question-container")
 
 quizbutton.addEventListener("click",function(){
     instruction.style.display = "none";
