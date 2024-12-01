@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="flex flex-col justify-center items-center gap-5 h-screen bg-sky-100" id="question-container">
+            <div class="flex justify-center items-center gap-x-40">
+                <h1 class="font-bold text-2xl">Simple Quiz</h1>
+                <div class="block text-right text-red-500" id="timer">Time left: 5 minutes</div>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h2 id="question" class="font-medium text-xl bg-sky-300 px-10">Question will appear here</h2>
+                <div id="answer-buttons" class="flex flex-col items-start gap-3">
+                    <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 1</button>
+                    <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 2</button>
+                    <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 3</button>
+                    <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 4</button>
+                </div>
+            </div>
+            <div>
+                <button class="bg-blue-600 py-1 px-2 rounded-md" id="backtoint">Back</button>
+                <button class="bg-blue-600 py-1 px-2 rounded-md" id="nextquestion">Next Question</button>
+            </div>
+        </div>
+    </nav>
+    <script>
+        var questiondata = [
+            {
+                question: "1. What does HTML stand for?",
+                option: [
+                    "a) Hyper Text Markup Language",
+                    "b) Home Tool Markup Language",
+                    "c) Hyperlinks and Text Markup Language",
+                    "d) Hyper Text Making Language"
+                ],
+                answer: "a) Hyper Text Markup Language"
+            },
+            {
+                question: "2. Which HTML tag is used to define the largest heading?",
+                option: ["a) head tag", "b) h6 tag", "c) heading tag", "d) h1 tag"],
+                answer: "d) h1 tag"
+            },
+            {
+                question: "3.Which CSS property is used to change the font size of an element?",
+                option: [
+                    `a)font-size`,
+                    "b) text-size",
+                    `c) font-style`,
+                    `d)font`
+                ],
+                answer: `a)font-size`
+            },
+            {
+                question: "4.Which CSS property is used to change the text color of an element?",
+                option: [
+                    `a) text-color`,
+                    "b) color",
+                    "c) font-color",
+                    "d) textcolor"
+                ],
+                answer: "b)color"
+            },
+            {
+                question: "5. What is the purpose of the <title> tag in HTML?",
+                option: [
+                    "a) To specify the title of a paragraph",
+                    "b) To set the title of the webpage, displayed in the browser's title bar",
+                    "c) To define a heading on the page",
+                    "d) To include metadata about the webpage"
+                ],
+                answer: "b) To set the title of the webpage, displayed in the browser's title bar"
+            }
+        ];
+        let currentquestionIndex = 0;
+let score = 0;
+
+function displayquestion() {
+    const questionPart = document.getElementById("question");
+    const optionsbtn = document.querySelectorAll(".btn");
+    const currentQuestion = questiondata[currentquestionIndex];
+
+    questionPart.textContent = currentQuestion.question;
+
+    optionsbtn.forEach((button, index) => {
+        button.textContent = currentQuestion.option[index];
+        button.onclick = () => checkAnswer(button.textContent);
+    });
+
+    // Update the 'Next' and 'Back' buttons
+    const backBtn = document.getElementById("backtoint");
+    const nextBtn = document.getElementById("nextquestion");
+
+    backBtn.disabled = currentquestionIndex === 0; // Disable "Back" on the first question
+    nextBtn.textContent = currentquestionIndex === questiondata.length - 1 ? "Finish" : "Next Question";
+}
+
+function checkAnswer(selectedOption) {
+    const currentQuestion = questiondata[currentquestionIndex];
+    if (selectedOption === currentQuestion.answer) {
+        score++;
+    }
+
+    currentquestionIndex++;
+    if (currentquestionIndex < questiondata.length) {
+        displayquestion();
+    } else {
+        showResults();
+    }
+}
+
+document.getElementById("backtoint").onclick = () => {
+    if (currentquestionIndex > 0) {
+        currentquestionIndex--; // Go to the previous question
+        displayquestion();
+    }
+};
+
+document.getElementById("nextquestion").onclick = () => {
+    if (currentquestionIndex < questiondata.length - 1) {
+        currentquestionIndex++; // Go to the next question
+        displayquestion();
+    } else {
+        showResults(); // End quiz if on the last question
+    }
+};
+
+function showResults() {
+    clearInterval(timerInterval); // Stop the timer
+    const questionContainer = document.getElementById("question-container");
+
+    // Generate the list of correct answers dynamically
+    const answerList = questiondata.map((item, index) => {
+        return `<p>${index + 1}) ${item.answer}</p>`;
+    }).join(""); // Join("") to combine the array of strings 
+
+    questionContainer.innerHTML = `
+        <h1 class="font-bold text-2xl">Quiz Completed</h1>
+        <p class="text-lg">Your Score: ${score} / ${questiondata.length}</p>
+        <h2 class="font-bold text-xl mt-4">Correct Answers:</h2>
+        ${answerList}`;
+}
+
+        let timerInterval;
+        let timeRemaining = 300; // 5 minutes in seconds
+
+        function startTimer() {
+            const timerDisplay = document.getElementById("timer");
+
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+
+                    // Format time as MM:SS
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+                } else {
+                    clearInterval(timerInterval); // Stop the timer
+                    showResults(); // End the quiz automatically
+                }
+            }, 1000); // Update every second
+        }
+
+        function showResults() {
+            clearInterval(timerInterval); // Stop the timer
+
+            const questionContainer = document.getElementById("question-container");
+
+            // Generate the list of correct answers dynamically
+            const answerList = questiondata.map((item, index) => {
+                return `<p>${index + 1}) ${item.answer}</p>`;
+            }).join(""); // Join("") to combine the array of strings 
+
+            questionContainer.innerHTML = `
+                <h1 class="font-bold text-2xl">Quiz Completed</h1>
+                <p class="text-lg">Your Score: ${score} / ${questiondata.length}</p>
+                <h2 class="font-bold text-xl mt-4">Correct Answers:</h2>
+                ${answerList}
+        <a href="index.html"><button class="bg-blue-600 py-1 px-2 rounded-md" id="nextquestion">Retake the test</button></a>
+`;
+                
+        }
+
+        // Start the quiz and timer when the page loads
+        window.onload = () => {
+            displayquestion(); // Display the first question
+            startTimer(); // Start the timer
+        };
+
+    </script>
+</body>
+</html>

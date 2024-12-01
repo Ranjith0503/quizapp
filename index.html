@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- component -->
+<div class="bg-sky-100 flex justify-center items-center h-screen" id="firstpage">
+<!-- Right: Login Form -->
+<div class= "lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+  <h1 class="text-2xl font-bold mb-4 text-center">Coding Quiz Challenge</h1>
+  <form action="#" method="POST">
+    <!-- Username Input -->
+    <div class="mb-4 bg-sky-100">
+      <label for="username" class="block text-gray-800">Username</label>
+      <input type="text" id="username" name="username" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required>
+    </div>
+    <!-- Email -->
+    <div class="mb-4">
+      <label for="email" class="block text-gray-800">Email</label>
+      <input type="email" id="email" name="email" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required>
+    </div>
+    <!--Start Button -->
+    <button class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full h-10" id="Startbutton">Start Quiz</button>
+  </form>
+</div>
+</div>
+
+<!--Instruction page-->
+<nav>
+    <div id="instruction"class="bg-sky-100 flex flex-col justify-center items-center h-screen gap-5 hidden">
+        <h1 class="font-bold text-2xl">Instructions</h1>
+       <div class="flex justify-center">
+        <ul class="font-medium p-2 mx-10 list-disc gap-10">
+            <li>The quizzes consists of questions carefully designed to help you self-assess your comprehension of the information presented on the topics covered in the module.</li><br>
+            <li>No data will be collected on the website regarding your responses or how many times you take the quiz.</li><br>
+            <li>Try to answer the following code-related questions within the time limit.</li><br>
+            <li>Keep in mind that incorrect answers will penalize your score/time by ten seconds!</li>
+        </ul>
+       </div>
+        <div>
+            <button class="bg-blue-600 py-1 px-2 rounded-md" id="Back">Back</button>
+            <button class="bg-blue-600 py-1 px-2 rounded-md" id="quizbutton">Go to Quiz</button>
+        </div>
+    </div>
+</nav>
+ <!--question page-->
+ <nav>
+    <div class="flex flex-col justify-center items-center gap-5 h-screen bg-sky-100" id="question-container">
+        <div class="flex justify-center items-center gap-x-40">
+            <h1 class="font-bold text-2xl">Simple Quiz</h1>
+            <div class="block text-right text-red-500" id="timer">Time left: 5 minutes</div>
+        </div>
+        <div class="flex flex-col gap-3">
+            <h2 id="question" class="font-medium text-xl bg-sky-300 px-10">Question will appear here</h2>
+            <div id="answer-buttons" class="flex flex-col items-start gap-3">
+                <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 1</button>
+                <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 2</button>
+                <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 3</button>
+                <button class="btn border border-black w-full hover:bg-black hover:text-white rounded text-start">Answer 4</button>
+            </div>
+        </div>
+        <div>
+            <button class="bg-blue-600 py-1 px-2 rounded-md" id="backtoint">Back</button>
+            <button class="bg-blue-600 py-1 px-2 rounded-md" id="nextquestion">Next Question</button>
+        </div>
+    </div>
+</nav>
+ 
+<script src="java.js"></script>
+</body>
+</html>
