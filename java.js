@@ -93,10 +93,11 @@ var questiondata = [
 ];
 let currentquestionIndex = 0;
 let score = 0;
+
 function displayquestion() {
     const questionPart = document.getElementById("question");
     const optionsbtn = document.querySelectorAll(".btn");
-    const nextBtn = document.getElementById("nextquestion"); // Get the "Next Question" button
+    const nextBtn = document.getElementById("nextquestion");
     const currentQuestion = questiondata[currentquestionIndex];
 
     // Set the current question text
@@ -115,19 +116,18 @@ function displayquestion() {
         button.style.color = ""; // Clear previous color
         button.disabled = false; // Enable all buttons
 
-        // Check if this button was previously selected
-        if (button.textContent === currentQuestion.answer) {
-            button.dataset.correct = "true"; // Mark the correct answer for styling later
-        } else {
-            button.dataset.correct = "false";
-        }
-
         // Add click event to each button
         button.onclick = function () {
-            // Highlight selected option
+            // Check the answer
             if (button.textContent === currentQuestion.answer) {
                 button.style.background = "green"; // Correct answer
                 button.style.color = "white";
+
+                // Increment score only if the question hasn't been answered correctly yet
+                if (!currentQuestion.answered) {
+                    score++;
+                    currentQuestion.answered = true; // Mark as answered
+                }
             } else {
                 button.style.background = "red"; // Incorrect answer
                 button.style.color = "white";
@@ -141,69 +141,46 @@ function displayquestion() {
         };
     });
 
-    // Add functionality to move to the next question
-    nextBtn.onclick = function () {
-        currentquestionIndex++;
-        if (currentquestionIndex < questiondata.length) {
-            displayquestion(); // Show the next question
-        } else {
-            showResults(); // Show results if all questions are completed
-        }
-    };
-
-    
-
-
-// Update the 'Next' and 'Back' buttons
-const backBtn = document.getElementById("backtoint");
-backBtn.disabled = currentquestionIndex === 0; // Disable "Back" on the first question
-nextBtn.textContent = currentquestionIndex === questiondata.length - 1 ? "Finish" : "Next Question";
-}
-function checkAnswer(selectedOption) {
-const currentQuestion = questiondata[currentquestionIndex];
-if (selectedOption === currentQuestion.answer) {
-score++;
+    // Update the "Next" and "Back" buttons
+    const backBtn = document.getElementById("backtoint");
+    backBtn.disabled = currentquestionIndex === 0; // Disable "Back" on the first question
+    nextBtn.textContent = currentquestionIndex === questiondata.length - 1 ? "Finish" : "Next Question";
 }
 
-currentquestionIndex++;
-if (currentquestionIndex < questiondata.length) {
-displayquestion();
-} else {
-showResults();
-}
-}
-
-document.getElementById("backtoint").onclick = () => {
-if (currentquestionIndex > 0) {
-currentquestionIndex--; // Go to the previous question
-displayquestion();
-}
+// Event listener for the "Next" button
+document.getElementById("nextquestion").onclick = function () {
+    if (currentquestionIndex < questiondata.length - 1) {
+        currentquestionIndex++; // Move to the next question
+        displayquestion(); // Display the next question
+    } else {
+        showResults(); // Show results if all questions are completed
+    }
 };
 
-document.getElementById("nextquestion").onclick = () => {
-if (currentquestionIndex < questiondata.length - 1) {
-currentquestionIndex++; // Go to the next question
-displayquestion();
-} else {
-showResults(); // End quiz if on the last question
-}
+// Event listener for the "Back" button
+document.getElementById("backtoint").onclick = function () {
+    if (currentquestionIndex > 0) {
+        currentquestionIndex--; // Move to the previous question
+        displayquestion(); // Display the previous question
+    }
 };
 
+// Function to show the results
 function showResults() {
-clearInterval(timerInterval); // Stop the timer
-const questionContainer = document.getElementById("question-container");
+    const questionContainer = document.getElementById("question-container");
 
-// Generate the list of correct answers dynamically
-const answerList = questiondata.map((item, index) => {
-return `<p>${index + 1}) ${item.answer}</p>`;
-}).join(""); // Join("") to combine the array of strings 
+    // Generate the list of correct answers dynamically
+    const answerList = questiondata
+        .map((item, index) => `<p>${index + 1}) ${item.answer}</p>`)
+        .join(""); // Combine the array of strings 
 
-questionContainer.innerHTML = `
-<h1 class="font-bold text-2xl">Quiz Completed</h1>
-<p class="text-lg">Your Score: ${score} / ${questiondata.length}</p>
-<h2 class="font-bold text-xl mt-4">Correct Answers:</h2>
-${answerList}`;
+    questionContainer.innerHTML = `
+        <h1 class="font-bold text-2xl">Quiz Completed</h1>
+        <p class="text-lg">Your Score: ${score} / ${questiondata.length}</p>
+        <h2 class="font-bold text-xl mt-4">Correct Answers:</h2>
+        ${answerList}`;
 }
+
 
 let timerInterval;
 let timeRemaining = 300; // 5 minutes in seconds
