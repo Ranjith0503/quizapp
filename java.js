@@ -10,7 +10,7 @@ startbutton.addEventListener("click", function (event) {
   var username = document.getElementById("username").value.trim();
   var email = document.getElementById("email").value.trim();
 
-  // Validate inputs
+  // Validate input
   if (!username) {
     alert("Please enter your username.");
     return;
