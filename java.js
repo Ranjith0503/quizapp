@@ -127,6 +127,9 @@ button.onclick = function () {
                 }
             }, 3000); // 1-second delay
         };
+     button.style.background = ""; 
+        button.style.color = ""; 
+        button.disabled = false;
 });
 
 // Update the 'Next' and 'Back' buttons
