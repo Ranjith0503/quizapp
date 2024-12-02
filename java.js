@@ -93,53 +93,72 @@ var questiondata = [
 ];
 let currentquestionIndex = 0;
 let score = 0;
-
 function displayquestion() {
-const questionPart = document.getElementById("question");
-const optionsbtn = document.querySelectorAll(".btn");
-const currentQuestion = questiondata[currentquestionIndex];
+    const questionPart = document.getElementById("question");
+    const optionsbtn = document.querySelectorAll(".btn");
+    const nextBtn = document.getElementById("nextquestion"); // Get the "Next Question" button
+    const currentQuestion = questiondata[currentquestionIndex];
 
-questionPart.textContent = currentQuestion.question;
+    // Set the current question text
+    questionPart.textContent = currentQuestion.question;
 
-optionsbtn.forEach((button, index) => {
-button.textContent = currentQuestion.option[index];
-//button.onclick = () => checkAnswer(button.textContent);
-button.onclick = function () {
-            // Check if the selected option is correct
+    // Reset the "Next Question" button and disable it initially
+    nextBtn.disabled = true;
+
+    // Reset and set options for the current question
+    optionsbtn.forEach((button, index) => {
+        // Set the option text
+        button.textContent = currentQuestion.option[index];
+
+        // Reset button styles and enable them
+        button.style.background = ""; // Clear previous background
+        button.style.color = ""; // Clear previous color
+        button.disabled = false; // Enable all buttons
+
+        // Check if this button was previously selected
+        if (button.textContent === currentQuestion.answer) {
+            button.dataset.correct = "true"; // Mark the correct answer for styling later
+        } else {
+            button.dataset.correct = "false";
+        }
+
+        // Add click event to each button
+        button.onclick = function () {
+            // Highlight selected option
             if (button.textContent === currentQuestion.answer) {
-                button.style.background = "black"; // Correct answer
+                button.style.background = "green"; // Correct answer
                 button.style.color = "white";
             } else {
-                button.style.background = "black"; // Incorrect answer
+                button.style.background = "red"; // Incorrect answer
                 button.style.color = "white";
             }
 
             // Disable all buttons to prevent further clicks
             optionsbtn.forEach((btn) => (btn.disabled = true));
 
-            // Automatically proceed to the next question after a delay
-            setTimeout(() => {
-                currentquestionIndex++;
-                if (currentquestionIndex < questiondata.length) {
-                    displayquestion();
-                } else {
-                    showResults();
-                }
-            }, 3000); // 1-second delay
+            // Enable the "Next Question" button
+            nextBtn.disabled = false;
         };
-     button.style.background = ""; 
-        button.style.color = ""; 
-        button.disabled = false;
-});
+    });
+
+    // Add functionality to move to the next question
+    nextBtn.onclick = function () {
+        currentquestionIndex++;
+        if (currentquestionIndex < questiondata.length) {
+            displayquestion(); // Show the next question
+        } else {
+            showResults(); // Show results if all questions are completed
+        }
+    };
+
+    
+
 
 // Update the 'Next' and 'Back' buttons
 const backBtn = document.getElementById("backtoint");
-const nextBtn = document.getElementById("nextquestion");
-
 backBtn.disabled = currentquestionIndex === 0; // Disable "Back" on the first question
 nextBtn.textContent = currentquestionIndex === questiondata.length - 1 ? "Finish" : "Next Question";
 }
-
 function checkAnswer(selectedOption) {
 const currentQuestion = questiondata[currentquestionIndex];
 if (selectedOption === currentQuestion.answer) {
