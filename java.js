@@ -103,7 +103,30 @@ questionPart.textContent = currentQuestion.question;
 
 optionsbtn.forEach((button, index) => {
 button.textContent = currentQuestion.option[index];
-button.onclick = () => checkAnswer(button.textContent);
+//button.onclick = () => checkAnswer(button.textContent);
+button.onclick = function () {
+            // Check if the selected option is correct
+            if (button.textContent === currentQuestion.answer) {
+                button.style.background = "black"; // Correct answer
+                button.style.color = "white";
+            } else {
+                button.style.background = "black"; // Incorrect answer
+                button.style.color = "white";
+            }
+
+            // Disable all buttons to prevent further clicks
+            optionsbtn.forEach((btn) => (btn.disabled = true));
+
+            // Automatically proceed to the next question after a delay
+            setTimeout(() => {
+                currentquestionIndex++;
+                if (currentquestionIndex < questiondata.length) {
+                    displayquestion();
+                } else {
+                    showResults();
+                }
+            }, 3000); // 1-second delay
+        };
 });
 
 // Update the 'Next' and 'Back' buttons
