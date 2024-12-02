@@ -78,7 +78,7 @@ var questiondata = [
             "c) font-color",
             "d) textcolor"
         ],
-        answer: "b)color"
+        answer:  "b) color"
     },
     {
         question: "5. What is the purpose of the <title> tag in HTML?",
